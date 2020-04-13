@@ -19,7 +19,7 @@ browser = webdriver.Chrome(driver_path)
 browser.get(url_login)
 sleep(2)
 
-#seu nome e email aqui
+# seu nome e email aqui
 dados = login()
 email = dados[0]
 senha = dados[1]
@@ -63,7 +63,7 @@ tag_a = div_search_results_content.find_element_by_tag_name("a")
 sleep(1)
 tag_a.click()
 
-# --- declaração das variáveis
+# --- variáveis
 lista_dados = []
 names = ''
 project = ''
@@ -76,9 +76,8 @@ while i <= qtd_itens:
     sleep(2)
     info_names = browser.find_elements_by_xpath("//*[@id = 'records_form']/div/div/div/div[1]/div/div[2]")
     texto = info_names[0].text
-    txt = texto.replace("Por:", "").replace("[", "").replace("]", "").replace("1", "").replace("2", "").replace("3",
-                                                                                                                "").replace(
-        "\nExibir ResearcherID e ORCID do Web of Science", "")
+    txt = texto.replace("Por:", "").replace("[", "").replace("]", "").replace("1", "").replace("2", "") \
+        .replace("3", "").replace("\nExibir ResearcherID e ORCID do Web of Science", "")
     name = txt.strip().replace(" ", "")
     names = name
 
@@ -89,7 +88,6 @@ while i <= qtd_itens:
     project = proj
 
     try:
-        # import pdb;pdb.set_trace()
         # vol_list = list(filter(lambda x: busca_dados(f=x, dado="Volume"), lista_info))
         buscar = 'Volume'
         vol_list = list(filter(lambda x: x.startswith(buscar), lista_info))
@@ -102,11 +100,9 @@ while i <= qtd_itens:
         vol = 'na'
     volume = vol
     sleep(2)
-    # import pdb;pdb.set_trace()
-    # print('numero do artigo')
+
     try:
         buscar = "Número do artigo"
-        # art_list = list(filter(lambda x: busca_dados(f=x, dado="Número do artigo"), lista_info))
         art_list = list(filter(lambda x: x.startswith(buscar), lista_info))
         art_split = [i.split(':', 2)[1] for i in art_list]
         n_art = re.findall(r'\b\d+\b', art_split[0])
@@ -117,11 +113,9 @@ while i <= qtd_itens:
         n_art = 'na'
     n_artigo = n_art
     sleep(2)
-    # import pdb;pdb.set_trace()
-    # print('DOI')
+
     try:
         buscar = "DOI"
-        # doi_list = list(filter(lambda x: busca_dados(f=x, dado="DOI"), lista_info))
         doi_list = list(filter(lambda x: x.startswith(buscar), lista_info))
         doi_split = [i.split(':', 2)[1] for i in doi_list]
         doi_proj = doi_split[0].strip()
@@ -131,11 +125,9 @@ while i <= qtd_itens:
         doi_proj = 'na'
     doi = doi_proj
     sleep(2)
-    # import pdb;pdb.set_trace()
-    # print('publicado')
+
     try:
         buscar = "Publicado"
-        # public_list = list(filter(lambda x: busca_dados(f=x, dado="Número do artigo"), lista_info))
         public_list = list(filter(lambda x: x.startswith(buscar), lista_info))
         public_split = [i.split(':', 2)[1] for i in public_list]
         public = public_split[0]
@@ -146,10 +138,9 @@ while i <= qtd_itens:
     publication = public
 
     info_autors = browser.find_elements_by_xpath("//*[@id = 'records_form']/div/div/div/div[1]/div/div[6]")
-    # import pdb;pdb.set_trace()
     txt_autor = ''
+
     for info_autor in info_autors:
-        # import pdb;pdb.set_trace()
         txt_autor = info_autor.text
         try:
             adress1 = txt_autor.split(":")[1].replace("\n", " ").replace("Endereços", "").strip()
@@ -166,7 +157,6 @@ while i <= qtd_itens:
     itr = 1
     try:
         tbl_endereco = browser.find_elements_by_class_name('FR_table_noborders')
-        # import pdb;pdb.set_trace()
         qdt_endereco = len(tbl_endereco)
 
     except Exception as e:
@@ -179,18 +169,9 @@ while i <= qtd_itens:
 
         id_reprint = "//*[@id=" + "'" + "show_reprint_pref_org_exp_link_" + str(itr) + "'" + "]/a"
         id_txt_reprint = "//*[@id=" + "'" + "reprint_pref_org_exp_link_" + str(itr) + "'" + "]/preferred_org"
-        # print(f't -->{t}')
-        # print(f'len tbl_endereco -->{len(tbl_endereco)}')
-        # import pdb;pdb.set_trace()
 
         if t < len(tbl_endereco):
-            # print("Reprint")
-            # print(id_reprint)
-            # print(id_txt_reprint)
-
             try:
-                # import pdb;pdb.set_trace()
-                # sleep(2)
                 tb.find_element_by_xpath(id_reprint).click()
                 sleep(2)
                 tx_consolid = browser.find_element_by_xpath(id_txt_reprint).text
@@ -200,9 +181,6 @@ while i <= qtd_itens:
                 consolid = 'na'
                 sleep(2)
                 list_consolid.append(consolid)
-
-            # print("Lista consolidada reprint")
-            # print(list_consolid)
 
         else:
             ite = 1
@@ -218,9 +196,7 @@ while i <= qtd_itens:
                         sleep(1)
                         tr.find_element_by_xpath(id_a_tag).click()
                         sleep(1)
-                        # import pdb;pdb.set_trace()
                         txt_consolid = tr.find_element_by_xpath(id_txt_consolid).text
-                        # import pdb;pdb.set_trace()
                         sleep(1)
                         list_consolid.append(txt_consolid)
                     except Exception as e:
@@ -230,7 +206,6 @@ while i <= qtd_itens:
                         list_consolid.append(consolid)
 
                     ite += 1
-                print(list_consolid)
 
         t += 1
         itr += 1
@@ -242,7 +217,7 @@ while i <= qtd_itens:
                  "Publicação": publication, "Informação dos autores": inform_autors, "Consolidado": consolidado}
     lista_dados.append(dict_temp)
 
-    print(lista_dados[-1]['Consolidado'])
+    #print(lista_dados[-1]['Consolidado'])
     print(f"fim da pagina _> {i}")
 
     try:
